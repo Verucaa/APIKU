@@ -1,0 +1,74 @@
+{
+  "site": {
+    "title": "API Hub",
+    "subtitle": "Rest API Studio",
+    "tagline": "MODULAR • AUTO-DOCS • VERGEL READY",
+    "favText": "⚡"
+  },
+  "hero": {
+    "kicker": "Plugin-based • Vercel Ready • Auto Docs",
+    "titleTop": "REST API jadi",
+    "titleGrad": "MUDAH & OTOMATIS",
+    "subtitle": "Tambah endpoint cukup dengan satu file — router, validasi, form input, dan dokumentasi ikut otomatis.",
+    "ctaPrimary": "⚡ JELAJAHI ENDPOINT",
+    "ctaSecondary": "📖 CARA PAKAI"
+  },
+  "stats": [
+    { "dynamic": "endpoints", "suffix": "", "label": "ENDPOINT" },
+    { "dynamic": "categories", "suffix": "", "label": "KATEGORI" },
+    { "value": "100%", "label": "CORS" },
+    { "value": "0", "label": "API KEY" }
+  ],
+  "features": [
+    { "icon": "▣", "title": "Plugin Per File", "desc": "Satu endpoint = satu file. Taruh di folder kategori, langsung terdaftar otomatis." },
+    { "icon": "▤", "title": "Validasi Otomatis", "desc": "Schema params menjadi kolom input di UI sekaligus penolakan parameter tidak valid." },
+    { "icon": "◈", "title": "Auto Docs", "desc": "Halaman ini dibangun dari /api/endpoints — dokumentasi selalu sinkron dengan kode." },
+    { "icon": "▥", "title": "Cache & Timeout", "desc": "TTL cache per endpoint dan batas waktu anti-hang, semua bawaan engine." },
+    { "icon": "⟁", "title": "CORS + Vercel", "desc": "Bisa dipanggil dari mana saja. Deploy sekali push tanpa server sendiri." },
+    { "icon": "▭", "title": "UI Responsif", "desc": "Nyaman di Android & desktop, lengkap dengan tester live dan animasi halus." }
+  ],
+  "featuresTitle": "KENAPA API HUB",
+  "featuresSub": "Didesain untuk developer yang ingin kreatif, bukan sibuk konfigurasi.",
+  "steps": [
+    { "title": "INSTALL & JALANKAN", "desc": "npm install && npm start — server naik di localhost:3000, UI otomatis terbuka." },
+    { "title": "BUAT FILE PLUGIN", "desc": "Taruh file .js di src/plugins/<kategori>/ — router otomatis jadi /<kategori>/<nama-file>." },
+    { "title": "DEFINISIKAN PARAMS", "desc": "Schema params menjadi kolom input di UI sekaligus validasi (string / number / boolean)." },
+    { "title": "ATUR CACHE & TIMEOUT", "desc": "Tambahkan cache: 60 (detik) dan timeout: 15000 (ms) langsung di file plugin." },
+    { "title": "UJI DI BROWSER", "desc": "Buka halaman Endpoint, klik kartu, isi form otomatis, lihat response sukses/gagal." },
+    { "title": "DEPLOY KE VERCEL", "desc": "vercel atau push ke GitHub — langsung live secara serverless tanpa konfigurasi." }
+  ],
+  "stepsTitle": "CARA PAKAI",
+  "stepsSub": "Enam langkah — dari kosong sampai endpoint yang di-deploy. Library fetch bawaan Node 18+, tanpa dependency scraping.",
+  "stepExampleLabel": "// TEMPLATE PLUGIN — salin kode ini",
+  "exampleCode": "// src/plugins/info/jam.js  ->  GET/POST /info/jam\nexport default {\n  name: \"Jam Sekarang\",\n  category: \"info\",\n  description: \"Menampilkan waktu server (contoh plugin terbaru)\",\n  method: [\"GET\", \"POST\"],\n  cache: 30,\n  params: {\n    zona: {\n      type: \"string\",\n      required: false,\n      description: \"Zona waktu, contoh Asia/Jakarta\"\n    }\n  },\n  execute: async ({ query, body }) => {\n    const zona = query.zona || body?.zona || \"Asia/Jakarta\";\n    return { zona, waktu: new Date().toLocaleString(\"id-ID\", { timeZone: zona }) };\n  }\n};",
+  "cta": {
+    "title": "SIAP MENCOBA?",
+    "desc": "Buka daftar endpoint, isi form otomatis, dan lihat response langsung.",
+    "button": "🚀 BUKA ENDPOINT"
+  },
+  "endpointPage": {
+    "title": "SEMUA",
+    "titleGrad": "ENDPOINT",
+    "subtitle": "Klik kartu untuk mencoba langsung dari browser.",
+    "searchPlaceholder": "Cari endpoint… (contoh: gempa, uuid)"
+  },
+  "footerNote": "Dibuat oleh",
+  "creator": "Veruu | Community VeruProject",
+  "colors": {
+    "bg": "#0a0c12",
+    "panel": "#10141f",
+    "panel-2": "#171d2e",
+    "ink": "#eef3fb",
+    "ink-dim": "#8fa2c0",
+    "blue": "#7cc4ff",
+    "blue-soft": "#d7e9ff",
+    "blue-deep": "#16234a",
+    "line": "#e6edf8",
+    "shadow": "#2b3f73"
+  },
+  "fonts": {
+    "head": "\"Space Grotesk\", \"Segoe UI\", system-ui, sans-serif",
+    "body": "\"Space Grotesk\", \"Segoe UI\", system-ui, sans-serif",
+    "mono": "\"JetBrains Mono\", ui-monospace, Menlo, Consolas, monospace"
+  }
+}
