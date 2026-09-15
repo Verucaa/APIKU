@@ -325,7 +325,7 @@
   .chip:hover { transform: translate(-2px, -2px); color: var(--ink); }
   .chip.active { background: var(--blue); color: #051022; box-shadow: 4px 4px 0 0 var(--shadow); transform: none; }
 
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 20px; padding-bottom: 60px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 20px; padding-bottom: 30px; }
   .card {
     position: relative; cursor: pointer;
     background-color: var(--panel);
@@ -378,6 +378,55 @@
   .empty { text-align: center; color: var(--ink-dim); padding: 70px 0; grid-column: 1/-1; font-size: 16px; }
   .skeleton { border-radius: 12px; border: var(--bd) solid var(--line); background: var(--panel); height: 160px; box-shadow: 5px 5px 0 0 var(--shadow); animation: pulse 1.4s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* ===== Pagination ===== */
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0 60px;
+  }
+  .page-btn {
+    min-width: 46px;
+    height: 46px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: var(--bd) solid var(--line);
+    background: var(--panel);
+    color: var(--ink-dim);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+  }
+  .page-btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    color: var(--ink);
+    box-shadow: 4px 4px 0 0 var(--shadow);
+  }
+  .page-btn.active {
+    background: var(--blue);
+    color: #051022;
+    box-shadow: 4px 4px 0 0 var(--shadow);
+    transform: none;
+  }
+  .page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .page-info {
+    width: 100%;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+  }
 
   /* ===== Menu dropdown (dari navbar) ===== */
   .drawer {
@@ -518,7 +567,7 @@
   }
   @media (max-width: 900px) {
     .nav-links, .nav-badge { display: none; }
-    .cards { padding-bottom: 30px; }
+    .cards { padding-bottom: 20px; }
   }
   @media (max-width: 760px) {
     nav { padding: 12px 16px; }
@@ -730,6 +779,9 @@ export default {
         <div class="skeleton"></div>
         <div class="skeleton"></div>
       </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination" id="pagination"></div>
     </div>
   </main>
 
@@ -982,6 +1034,9 @@ function renderStats(stats) {
 /* ---------- endpoint loading ---------- */
 let allEndpoints = [];
 let activeCat = "all";
+let currentPage = 1;
+const PER_PAGE = 6;
+let filteredEndpoints = [];
 
 async function loadEndpoints() {
   const cards = $("#cards");
@@ -995,6 +1050,7 @@ async function loadEndpoints() {
     allEndpoints = [];
     for (const list of Object.values(groups)) for (const ep of list) allEndpoints.push(ep);
 
+    currentPage = 1;
     renderChips(groups);
     renderCards();
     fillDynamicStats(groups);
@@ -1036,6 +1092,7 @@ function renderChips(groups) {
     b.textContent = c.label;
     b.onclick = () => {
       activeCat = c.key;
+      currentPage = 1;
       $$(".chip").forEach((el) => el.classList.toggle("active", el.dataset.cat === c.key));
       renderCards();
     };
@@ -1048,7 +1105,7 @@ function renderCards() {
   const q = $("#search").value.trim().toLowerCase();
   cards.innerHTML = "";
 
-  const filtered = allEndpoints.filter((ep) => {
+  filteredEndpoints = allEndpoints.filter((ep) => {
     const matchCat = activeCat === "all" || ep.category === activeCat;
     const matchQ = !q ||
       ep.name.toLowerCase().includes(q) ||
@@ -1058,12 +1115,19 @@ function renderCards() {
     return matchCat && matchQ;
   });
 
-  if (!filtered.length) {
+  if (!filteredEndpoints.length) {
     cards.innerHTML = '<div class="empty">Tidak ada endpoint yang cocok ◉</div>';
+    $("#pagination").innerHTML = "";
     return;
   }
 
-  filtered.forEach((ep, i) => {
+  const totalPages = Math.ceil(filteredEndpoints.length / PER_PAGE);
+  if (currentPage > totalPages) currentPage = 1;
+
+  const start = (currentPage - 1) * PER_PAGE;
+  const pageItems = filteredEndpoints.slice(start, start + PER_PAGE);
+
+  pageItems.forEach((ep, i) => {
     const card = document.createElement("div");
     card.className = "card";
     card.style.transitionDelay = (i % 6) * 60 + "ms";
@@ -1094,6 +1158,66 @@ function renderCards() {
     cards.appendChild(card);
     requestAnimationFrame(() => card.classList.add("vis"));
   });
+
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const box = $("#pagination");
+  box.innerHTML = "";
+  if (totalPages <= 1) return;
+
+  const mkBtn = (label, page, opts = {}) => {
+    const b = document.createElement("button");
+    b.className = "page-btn" + (opts.active ? " active" : "");
+    b.textContent = label;
+    b.disabled = !!opts.disabled;
+    b.onclick = () => {
+      currentPage = page;
+      renderCards();
+      const cards = $("#cards");
+      if (cards) cards.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    return b;
+  };
+
+  const info = document.createElement("div");
+  info.className = "page-info";
+  info.textContent = `HALAMAN ${currentPage} / ${totalPages} · ${filteredEndpoints.length} ENDPOINT`;
+  box.appendChild(info);
+
+  box.appendChild(mkBtn("‹", currentPage - 1, { disabled: currentPage === 1 }));
+
+  const pages = [];
+  const maxShow = 5;
+  let from = Math.max(1, currentPage - 2);
+  let to = Math.min(totalPages, from + maxShow - 1);
+  from = Math.max(1, to - maxShow + 1);
+
+  if (from > 1) {
+    pages.push(1);
+    if (from > 2) pages.push("…");
+  }
+  for (let i = from; i <= to; i++) pages.push(i);
+  if (to < totalPages) {
+    if (to < totalPages - 1) pages.push("…");
+    pages.push(totalPages);
+  }
+
+  pages.forEach((p) => {
+    if (p === "…") {
+      const s = document.createElement("span");
+      s.className = "page-btn";
+      s.style.cursor = "default";
+      s.style.opacity = "0.6";
+      s.textContent = "…";
+      box.appendChild(s);
+    } else {
+      box.appendChild(mkBtn(String(p), p, { active: p === currentPage }));
+    }
+  });
+
+  box.appendChild(mkBtn("›", currentPage + 1, { disabled: currentPage === totalPages }));
 }
 
 function push(el) {
@@ -1101,7 +1225,10 @@ function push(el) {
   setTimeout(() => (el.style.transform = ""), 140);
 }
 
-$("#search").addEventListener("input", renderCards);
+$("#search").addEventListener("input", () => {
+  currentPage = 1;
+  renderCards();
+});
 
 /* ---------- modal ---------- */
 let currentEp = null;
