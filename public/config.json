@@ -1,17 +1,17 @@
 {
   "site": {
-    "title": "API Hub",
-    "subtitle": "Rest API Studio",
+    "title": "VeruAPI",
+    "subtitle": "VeruProject",
     "tagline": "MODULAR • AUTO-DOCS • VERGEL READY",
-    "favText": "⚡"
+    "favText": ""
   },
   "hero": {
     "kicker": "Plugin-based • Vercel Ready • Auto Docs",
     "titleTop": "REST API jadi",
     "titleGrad": "MUDAH & OTOMATIS",
     "subtitle": "Tambah endpoint cukup dengan satu file — router, validasi, form input, dan dokumentasi ikut otomatis.",
-    "ctaPrimary": "⚡ JELAJAHI ENDPOINT",
-    "ctaSecondary": "📖 CARA PAKAI"
+    "ctaPrimary": "JELAJAHI ENDPOINT",
+    "ctaSecondary": "CARA PAKAI"
   },
   "stats": [
     { "dynamic": "endpoints", "suffix": "", "label": "ENDPOINT" },
@@ -27,7 +27,7 @@
     { "icon": "⟁", "title": "CORS + Vercel", "desc": "Bisa dipanggil dari mana saja. Deploy sekali push tanpa server sendiri." },
     { "icon": "▭", "title": "UI Responsif", "desc": "Nyaman di Android & desktop, lengkap dengan tester live dan animasi halus." }
   ],
-  "featuresTitle": "KENAPA API HUB",
+  "featuresTitle": "KENAPA VeruAPI",
   "featuresSub": "Didesain untuk developer yang ingin kreatif, bukan sibuk konfigurasi.",
   "steps": [
     { "title": "INSTALL & JALANKAN", "desc": "npm install && npm start — server naik di localhost:3000, UI otomatis terbuka." },
