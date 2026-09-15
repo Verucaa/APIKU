@@ -5,7 +5,16 @@ import { fileURLToPath } from "node:url";
 
 export const CREATOR = "Veruu | Community VeruProject";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let _dirname = null;
+const getDirname = () => {
+  if (!_dirname) {
+    if (typeof import.meta.url !== 'string') {
+      throw new Error('Fungsi ini memerlukan lingkungan Node.js');
+    }
+    _dirname = path.dirname(fileURLToPath(import.meta.url));
+  }
+  return _dirname;
+};
 
 const USER_AGENTS = [
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
